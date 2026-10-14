@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ball Touch Game</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: Arial, sans-serif;
+    color: #fff;
+  }
+  h1 { margin: 0 0 10px; letter-spacing: 2px; }
+  #score { font-size: 24px; margin-bottom: 15px; }
+  #message { height: 30px; font-size: 20px; color: #ffd54f; margin-bottom: 10px; }
+  #arena {
+    position: relative;
+    width: 90vw;
+    max-width: 500px;
+    height: 350px;
+    border: 3px solid #4fc3f7;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 20px #4fc3f7;
+    overflow: hidden;
+  }
+  #ball {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff8a80, #d50000);
+    box-shadow: 0 0 15px #ff5252;
+    cursor: pointer;
+    transition: left 0.15s, top 0.15s, transform 0.1s;
+  }
+  #ball:active { transform: scale(0.9); }
+  #ball.done { background: radial-gradient(circle at 30% 30%, #b9f6ca, #00c853); box-shadow: 0 0 15px #00e676; cursor: default; }
+  button {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background: #4fc3f7;
+    color: #003;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  button:hover { transform: scale(1.08); box-shadow: 0 0 12px #4fc3f7; }
+</style>
+</head>
+<body>
+  <h1>Ball Touch Game</h1>
+  <div id="score">Count: <span id="count">0</span> / 10</div>
+  <div id="message">Touch the ball!</div>
+  <div id="arena"><div id="ball"></div></div>
+  <button id="reset">Restart</button>
+
+<script>
+  const limit = 10;
+  let count = 0;
+
+  const arena = document.getElementById("arena");
+  const ball = document.getElementById("ball");
+  const countEl = document.getElementById("count");
+  const message = document.getElementById("message");
+
+  function moveBall() {
+    const maxX = arena.clientWidth - ball.offsetWidth;
+    const maxY = arena.clientHeight - ball.offsetHeight;
+    ball.style.left = Math.random() * maxX + "px";
+    ball.style.top = Math.random() * maxY + "px";
+  }
+
+  function touchBall() {
+    if (count >= limit) return;
+    count++;
+    countEl.textContent = count;
+    if (count >= limit) {
+      message.textContent = "Limit reached! You win!";
+      ball.classList.add("done");
+    } else {
+      message.textContent = "Nice! Keep going!";
+      moveBall();
+    }
+  }
+
+  function resetGame() {
+    count = 0;
+    countEl.textContent = 0;
+    message.textContent = "Touch the ball!";
+    ball.classList.remove("done");
+    moveBall();
+  }
+
+  ball.addEventListener("click", touchBall);
+  document.getElementById("reset").addEventListener("click", resetGame);
+  window.addEventListener("load", moveBall);
+</script>
+</body>
+</html>
